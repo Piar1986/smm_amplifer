@@ -1,9 +1,9 @@
 import argparse
 import os
 from dotenv import load_dotenv
-from scripts.facebook import get_facebook_analyze
-from scripts.instagram import get_instagram_analyze
-from scripts.vk import get_vk_analyze
+from scripts.facebook import fetch_facebook_analyze
+from scripts.instagram import fetch_instagram_analyze
+from scripts.vk import fetch_vk_analyze
 
 
 FACEBOOK_DAYS_COUNT = 0
@@ -52,7 +52,7 @@ def main():
     network_name = args.network_name
 
     if network_name=='instagram':
-        instagram_comments_top, instagram_posts_top = get_instagram_analyze(
+        instagram_comments_top, instagram_posts_top = fetch_instagram_analyze(
             instagram_login, 
             instagram_password, 
             INSTAGRAM_POSTS_COUNT,
@@ -64,7 +64,7 @@ def main():
         print('Posts Top:', instagram_posts_top)
 
     if network_name=='vk':
-        vk_audience_core = get_vk_analyze(
+        vk_audience_core = fetch_vk_analyze(
             vk_access_token,
             VK_VERSION,
             VK_DAYS_COUNT,
@@ -74,7 +74,7 @@ def main():
         print('Audience core:', vk_audience_core)
 
     if network_name=='facebook':
-        facebook_commentators_ids, facebook_reactions_statistic = get_facebook_analyze(
+        facebook_commentators_ids, facebook_reactions_statistic = fetch_facebook_analyze(
             facebook_access_token, 
             facebook_user_id,
             FACEBOOK_DAYS_COUNT,

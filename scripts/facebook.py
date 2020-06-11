@@ -1,5 +1,5 @@
 import requests
-from .start_date import get_start_date
+from .start_date import calculate_start_date
 
 
 def get_groups(access_token, user_id):
@@ -12,7 +12,7 @@ def get_groups(access_token, user_id):
     return groups
 
 
-def get_group_id(groups, group_title):
+def determine_group_id(groups, group_title):
     for group in groups:
         group_name = group['name']
         if not group_name==group_title:
@@ -117,16 +117,16 @@ def get_users_reactions_statistic(users_ids, reactions, facebook_reactions):
     return users_reactions_statistic
 
 
-def get_facebook_analyze(access_token, user_id, days_count, month_count, facebook_reactions, group_title):
+def fetch_facebook_analyze(access_token, user_id, days_count, month_count, facebook_reactions, group_title):
     groups = get_groups(access_token, user_id)
-    group_id = get_group_id(groups, group_title)
+    group_id = determine_group_id(groups, group_title)
 
     if not group_id:
         exit(f'Группа {group_title} не найдена')
 
     group_posts = get_group_posts(access_token, group_id)
     posts_ids = [post['id'] for post in group_posts]
-    start_date = get_start_date(days_count, month_count)
+    start_date = calculate_start_date(days_count, month_count)
     posts_comments = get_posts_comments(
         access_token, 
         posts_ids, 

@@ -1,9 +1,9 @@
 import requests
 import datetime
-from .start_date import get_start_date
+from .start_date import calculate_start_date
 
 
-def get_group_id(group_name, access_token, version):
+def determine_group_id(group_name, access_token, version):
     url = 'https://api.vk.com/method/groups.getById'
     params = {
         'group_id':group_name,
@@ -108,8 +108,8 @@ def get_post_likes(post_id, group_id, access_token, version):
     return post_likes
 
 
-def get_vk_analyze(access_token, version, days_count, months_count, group_name):
-    group_id = get_group_id(
+def fetch_vk_analyze(access_token, version, days_count, months_count, group_name):
+    group_id = determine_group_id(
         group_name,
         access_token,
         version,
@@ -139,7 +139,7 @@ def get_vk_analyze(access_token, version, days_count, months_count, group_name):
             )
         posts_likers.extend(post_likers)
 
-    start_date = get_start_date(days_count, months_count)
+    start_date = calculate_start_date(days_count, months_count)
     comments_users_ids = get_comments_users_ids(
         posts_comments, 
         start_date, 
