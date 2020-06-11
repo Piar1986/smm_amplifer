@@ -1,7 +1,9 @@
 import argparse
 import os
 from dotenv import load_dotenv
-from scripts import get_instagram_analyze, get_vk_analyze, get_facebook_analyze
+from scripts.facebook import get_facebook_analyze
+from scripts.instagram import get_instagram_analyze
+from scripts.vk import get_vk_analyze
 
 
 FACEBOOK_MONTH_COUNT = 1
