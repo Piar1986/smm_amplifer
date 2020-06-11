@@ -1,5 +1,6 @@
 import requests
 import datetime
+from .start_date import get_start_date
 
 
 def get_group_id(group_name, access_token, version):
@@ -62,12 +63,6 @@ def get_post_comments(post_id, group_id, access_token, version):
     return post_comments
 
 
-def get_start_date(days_count):
-    today = datetime.datetime.today()
-    start_date = today - datetime.timedelta(days=days_count)
-    return start_date
-
-
 def get_comments_users_ids(comments, start_date, group_id):
     post_comments_users_ids = []
     for comment in comments:
@@ -113,7 +108,7 @@ def get_post_likes(post_id, group_id, access_token, version):
     return post_likes
 
 
-def get_vk_analyze(access_token, version, days_count, group_name):
+def get_vk_analyze(access_token, version, days_count, months_count, group_name):
     group_id = get_group_id(
         group_name,
         access_token,
@@ -144,7 +139,7 @@ def get_vk_analyze(access_token, version, days_count, group_name):
             )
         posts_likers.extend(post_likers)
 
-    start_date = get_start_date(days_count)
+    start_date = get_start_date(days_count, months_count)
     comments_users_ids = get_comments_users_ids(
         posts_comments, 
         start_date, 

@@ -6,7 +6,8 @@ from scripts.instagram import get_instagram_analyze
 from scripts.vk import get_vk_analyze
 
 
-FACEBOOK_MONTH_COUNT = 1
+FACEBOOK_DAYS_COUNT = 0
+FACEBOOK_MONTHS_COUNT = 1
 FACEBOOK_REACTIONS = [
     'LIKE', 
     'LOVE', 
@@ -17,9 +18,11 @@ FACEBOOK_REACTIONS = [
     'THANKFUL',
 ]
 INSTAGRAM_POSTS_COUNT = 5
+INSTAGRAM_DAYS_COUNT = 0
 INSTAGRAM_MONTHS_COUNT = 3
 VK_VERSION = 5.107
 VK_DAYS_COUNT = 14
+VK_MONTHS_COUNT = 0
 
 
 def create_parser():
@@ -53,6 +56,7 @@ def main():
             instagram_login, 
             instagram_password, 
             INSTAGRAM_POSTS_COUNT,
+            INSTAGRAM_DAYS_COUNT,
             INSTAGRAM_MONTHS_COUNT,
             group_name,
             )
@@ -64,6 +68,7 @@ def main():
             vk_access_token,
             VK_VERSION,
             VK_DAYS_COUNT,
+            VK_MONTHS_COUNT,
             group_name,
             )
         print('Audience core:', vk_audience_core)
@@ -71,8 +76,9 @@ def main():
     if network_name=='facebook':
         facebook_commentators_ids, facebook_reactions_statistic = get_facebook_analyze(
             facebook_access_token, 
-            facebook_user_id, 
-            FACEBOOK_MONTH_COUNT,
+            facebook_user_id,
+            FACEBOOK_DAYS_COUNT,
+            FACEBOOK_MONTHS_COUNT,
             FACEBOOK_REACTIONS,
             group_name,
             )

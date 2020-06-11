@@ -1,13 +1,7 @@
 import datetime
 from instabot import Bot
 from operator import itemgetter
-from dateutil.relativedelta import relativedelta
-
-
-def get_start_date(months_count):
-    today = datetime.datetime.today()
-    start_date = today - relativedelta(months = months_count)
-    return start_date
+from .start_date import get_start_date
 
 
 def get_last_posts(bot, group_id, posts_count):
@@ -39,7 +33,7 @@ def get_top_commentators(users_ids):
     return top_commentators_dict
 
 
-def get_instagram_analyze(login, password, posts_count, months_count, group_name):
+def get_instagram_analyze(login, password, posts_count, days_count, months_count, group_name):
     bot = Bot()
     bot.login(username=login, password=password)
 
@@ -49,7 +43,7 @@ def get_instagram_analyze(login, password, posts_count, months_count, group_name
         group_name,
         posts_count,
         )
-    start_date = get_start_date(months_count)
+    start_date = get_start_date(days_count, months_count)
     commentators_ids = []
     posts_commentators_ids = []
     for post in last_posts:
