@@ -117,16 +117,16 @@ def get_users_reactions_statistic(users_ids, reactions, facebook_reactions):
     return users_reactions_statistic
 
 
-def fetch_facebook_analyze(access_token, user_id, days_count, month_count, facebook_reactions, group_title):
+def fetch_facebook_analyze(access_token, user_id, days_count, months_count, facebook_reactions, group_name):
     groups = get_groups(access_token, user_id)
-    group_id = determine_group_id(groups, group_title)
+    group_id = determine_group_id(groups, group_name)
 
     if not group_id:
         exit(f'Группа {group_title} не найдена')
 
     group_posts = get_group_posts(access_token, group_id)
     posts_ids = [post['id'] for post in group_posts]
-    start_date = calculate_start_date(days_count, month_count)
+    start_date = calculate_start_date(days_count, months_count)
     posts_comments = get_posts_comments(
         access_token, 
         posts_ids, 
