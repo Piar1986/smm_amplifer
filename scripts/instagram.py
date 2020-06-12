@@ -34,14 +34,12 @@ def get_top_commentators(users_ids):
 
 
 def fetch_instagram_analyze(login, password, posts_count, days_count, months_count, group_name):
-
     bot = Bot()
     bot.login(username=login, password=password)
-
     group_id = bot.get_user_id_from_username(group_name)
     last_posts = get_last_posts(
         bot,
-        group_name,
+        group_id,
         posts_count,
         )
     start_date = calculate_start_date(days_count, months_count)

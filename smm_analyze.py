@@ -22,12 +22,14 @@ VK_VERSION = 5.107
 def create_parser():
     parser = configargparse.ArgParser(default_config_files=['config.ini'])
     parser.add('-c', '--config_file', is_config_file=True, help='Путь к файлу конфигурации')
-    parser.add('--group_name', required=True, help='Название группы', type=str)
+    parser.add('--facebook_group_name', required=True, help='Название группы Facebook', type=str)
     parser.add('--facebook_days_count', required=True, help='Количество дней для анализа Facebook', type=int)
     parser.add('--facebook_months_count', required=True, help='Количество месяцев для анализа Facebook', type=int)
+    parser.add('--instagram_group_name', required=True, help='Название группы Instagram', type=str)
     parser.add('--instagram_posts_count', required=True, help='Количество постов Instagram', type=int)
     parser.add('--instagram_days_count', required=True, help='Количество дней для анализа Instagram', type=int)
     parser.add('--instagram_months_count', required=True, help='Количество месяцев для анализа Instagram', type=int)
+    parser.add('--vk_group_name', required=True, help='Название группы VK', type=str)
     parser.add('--vk_days_count', required=True, help='Количество дней для анализа VK', type=int)
     parser.add('--vk_months_count', required=True, help='Количество месяцев для анализа VK', type=int)
     subparsers = parser.add_subparsers()
@@ -49,7 +51,7 @@ def run_facebook_analyze(args, authentication_summary):
         args.facebook_days_count,
         args.facebook_months_count,
         FACEBOOK_REACTIONS,
-        args.group_name,
+        args.facebook_group_name,
         )
     print('Commentators:', facebook_commentators_ids)
     print('Reactions statistic:', facebook_reactions_statistic)
@@ -64,7 +66,7 @@ def run_instagram_analyze(args, authentication_summary):
         args.instagram_posts_count,
         args.instagram_days_count,
         args.instagram_months_count,
-        args.group_name,
+        args.instagram_group_name,
         )
     print('Comments Top:', instagram_comments_top)
     print('Posts Top:', instagram_posts_top)
@@ -77,7 +79,7 @@ def run_vk_analyze(args, authentication_summary):
         VK_VERSION,
         args.vk_days_count,
         args.vk_months_count,
-        args.group_name,
+        args.vk_group_name,
         )
     print('Audience core:', vk_audience_core)
 
@@ -99,7 +101,7 @@ def main():
         'instagram_password':instagram_password,
         'vk_access_token':vk_access_token,
     }
-    
+
     try:
         args.func(args, authentication_summary)
     except:
