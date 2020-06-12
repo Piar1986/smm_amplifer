@@ -1,4 +1,5 @@
 import argparse
+import configargparse
 import os
 from dotenv import load_dotenv
 from scripts.facebook import fetch_facebook_analyze
@@ -6,8 +7,6 @@ from scripts.instagram import fetch_instagram_analyze
 from scripts.vk import fetch_vk_analyze
 
 
-FACEBOOK_DAYS_COUNT = 0
-FACEBOOK_MONTHS_COUNT = 1
 FACEBOOK_REACTIONS = [
     'LIKE', 
     'LOVE', 
@@ -17,18 +16,21 @@ FACEBOOK_REACTIONS = [
     'ANGRY', 
     'THANKFUL',
 ]
-INSTAGRAM_POSTS_COUNT = 5
-INSTAGRAM_DAYS_COUNT = 0
-INSTAGRAM_MONTHS_COUNT = 3
 VK_VERSION = 5.107
-VK_DAYS_COUNT = 14
-VK_MONTHS_COUNT = 0
 
 
 def create_parser():
-    parser = argparse.ArgumentParser(description='Инструмент для SMM аналитики')
-    parser.add_argument('-n', '--network_name', help='Название социальной сети', type=str)
-    parser.add_argument('-g', '--group_name', help='Название группы', type=str)
+    parser = configargparse.ArgParser(default_config_files=['config.ini'])
+    parser.add('-c', '--config_file', is_config_file=True, help='Путь к файлу конфигурации')
+    parser.add('-n', '--network_name', help='Название социальной сети', type=str)
+    parser.add('-g', '--group_name', help='Название группы', type=str)
+    parser.add('--facebook_days_count', required=True, help='Количество дней для анализа Facebook', type=int)
+    parser.add('--facebook_months_count', required=True, help='Количество месяцев для анализа Facebook', type=int)
+    parser.add('--instagram_posts_count', required=True, help='Количество постов Instagram', type=int)
+    parser.add('--instagram_days_count', required=True, help='Количество дней для анализа Instagram', type=int)
+    parser.add('--instagram_months_count', required=True, help='Количество месяцев для анализа Instagram', type=int)
+    parser.add('--vk_days_count', required=True, help='Количество дней для анализа VK', type=int)
+    parser.add('--vk_months_count', required=True, help='Количество месяцев для анализа VK', type=int)
     return parser
 
 
@@ -55,9 +57,9 @@ def main():
         instagram_comments_top, instagram_posts_top = fetch_instagram_analyze(
             instagram_login, 
             instagram_password, 
-            INSTAGRAM_POSTS_COUNT,
-            INSTAGRAM_DAYS_COUNT,
-            INSTAGRAM_MONTHS_COUNT,
+            args.instagram_posts_count,
+            args.instagram_days_count,
+            args.instagram_months_count,
             group_name,
             )
         print('Comments Top:', instagram_comments_top)
@@ -67,8 +69,8 @@ def main():
         vk_audience_core = fetch_vk_analyze(
             vk_access_token,
             VK_VERSION,
-            VK_DAYS_COUNT,
-            VK_MONTHS_COUNT,
+            args.vk_days_count,
+            args.vk_months_count,
             group_name,
             )
         print('Audience core:', vk_audience_core)
@@ -77,8 +79,8 @@ def main():
         facebook_commentators_ids, facebook_reactions_statistic = fetch_facebook_analyze(
             facebook_access_token, 
             facebook_user_id,
-            FACEBOOK_DAYS_COUNT,
-            FACEBOOK_MONTHS_COUNT,
+            args.facebook_days_count,
+            args.facebook_months_count,
             FACEBOOK_REACTIONS,
             group_name,
             )
