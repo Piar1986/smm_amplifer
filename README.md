@@ -49,10 +49,14 @@ pip install -r requirements.txt
 
 ### Как запустить
 
-Пример команды запуска: 
-`python smm_analyze.py --network_name vk --group_name cocacola`
-
-Сокращенный вариант: `python smm_analyze.py -n vk -g cocacola`
+Пример команды запуска:
+```
+python smm_analyze.py --network_name vk --group_name cocacola
+```
+Сокращенный вариант: 
+```
+python smm_analyze.py -n vk -g cocacola
+```
 
 Пример результата для VK и Facebook: 
 ![](result_example.png)
