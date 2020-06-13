@@ -53,3 +53,5 @@ def fetch_instagram_analyze(login, password, posts_count, days_count, months_cou
         posts_commentators_ids.extend(post_commentators_ids_set)
     comments_top = get_top_commentators(commentators_ids)
     posts_top = get_top_commentators(posts_commentators_ids)
+    print('Comments Top:', comments_top)
+    print('Posts Top:', posts_top)

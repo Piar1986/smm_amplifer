@@ -34,33 +34,32 @@ def create_parser():
     parser.add('--vk_months_count', required=True, help='Количество месяцев для анализа VK', type=int)
     subparsers = parser.add_subparsers()
     facebook_parser = subparsers.add_parser('facebook')
-    facebook_parser.set_defaults(func=run_facebook_analyze)
+    facebook_parser.set_defaults(function=run_facebook_analyze)
     instagram_parser = subparsers.add_parser('instagram')
-    instagram_parser.set_defaults(func=run_instagram_analyze)
+    instagram_parser.set_defaults(function=run_instagram_analyze)
     vk_parser = subparsers.add_parser('vk')
-    vk_parser.set_defaults(func=run_vk_analyze)
+    vk_parser.set_defaults(function=run_vk_analyze)
     return parser
 
 
 def run_facebook_analyze(args, authentication_summary):
     facebook_access_token = authentication_summary['facebook_access_token']
     facebook_user_id = authentication_summary['facebook_user_id']
-    facebook_commentators_ids, facebook_reactions_statistic = fetch_facebook_analyze(
+    if not fetch_facebook_analyze(
         facebook_access_token, 
         facebook_user_id,
         args.facebook_days_count,
         args.facebook_months_count,
         FACEBOOK_REACTIONS,
         args.facebook_group_name,
-        )
-    print('Commentators:', facebook_commentators_ids)
-    print('Reactions statistic:', facebook_reactions_statistic)
+        ):
+        exit(f'Группа {args.facebook_group_name} не найдена')
 
 
 def run_instagram_analyze(args, authentication_summary):
     instagram_login = authentication_summary['instagram_login']
     instagram_password = authentication_summary['instagram_password']
-    instagram_comments_top, instagram_posts_top = fetch_instagram_analyze(
+    fetch_instagram_analyze(
         instagram_login, 
         instagram_password, 
         args.instagram_posts_count,
@@ -68,8 +67,6 @@ def run_instagram_analyze(args, authentication_summary):
         args.instagram_months_count,
         args.instagram_group_name,
         )
-    print('Comments Top:', instagram_comments_top)
-    print('Posts Top:', instagram_posts_top)
 
 
 def run_vk_analyze(args, authentication_summary):
@@ -81,7 +78,6 @@ def run_vk_analyze(args, authentication_summary):
         args.vk_months_count,
         args.vk_group_name,
         )
-    print('Audience core:', vk_audience_core)
 
 
 def main():
@@ -102,10 +98,7 @@ def main():
         'vk_access_token':vk_access_token,
     }
 
-    try:
-        args.func(args, authentication_summary)
-    except:
-        exit('Введите название социальной сети')
+    args.function(args, authentication_summary)
 
 
 if __name__ == '__main__':

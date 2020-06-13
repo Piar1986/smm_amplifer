@@ -149,4 +149,4 @@ def fetch_vk_analyze(access_token, version, days_count, months_count, group_name
     commentators_ids = set(comments_users_ids)
     likers_ids = set(posts_likers)
     audience_core = commentators_ids & likers_ids
-    return audience_core
+    print('Audience core:', audience_core)

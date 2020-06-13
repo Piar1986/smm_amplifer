@@ -75,11 +75,12 @@ def get_user_reactions_statistic(user_id, reactions, facebook_reactions):
 
 def fetch_facebook_analyze(access_token, user_id, days_count, months_count, facebook_reactions, group_name):
     groups = get_groups(access_token, user_id)
-    group_id = [group['id'] for group in groups if group['name']==group_name][0]
+    group_id_list = [group['id'] for group in groups if group['name']==group_name]
 
-    if not group_id:
-        exit(f'Группа {group_title} не найдена')
+    if not group_id_list:
+        return
 
+    group_id = group_id_list[0]
     group_posts = get_group_posts(access_token, group_id)
     posts_ids = [post['id'] for post in group_posts]
     start_date = calculate_start_date(days_count, months_count)
@@ -97,4 +98,6 @@ def fetch_facebook_analyze(access_token, user_id, days_count, months_count, face
             posts_reactions, 
             facebook_reactions
         ) for user_id in reactions_users_ids}
-    return commentators_ids, users_reactions_statistic
+    print('Commentators:', commentators_ids)
+    print('Reactions statistic:', users_reactions_statistic)
+    return True
