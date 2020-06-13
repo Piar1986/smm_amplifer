@@ -12,15 +12,6 @@ def get_groups(access_token, user_id):
     return groups
 
 
-def determine_group_id(groups, group_title):
-    for group in groups:
-        group_name = group['name']
-        if not group_name==group_title:
-            continue
-        group_id = group['id']
-        return group_id
-
-
 def get_group_posts(access_token, group_id):
     url = f"https://graph.facebook.com/{group_id}/feed"
     params = {
@@ -55,14 +46,6 @@ def get_posts_comments(access_token, posts_ids, start_date):
     return posts_comments
 
 
-def get_commentators_ids(comments):
-    comments_users_ids = []
-    for comment in comments:
-        user_id = comment['from']['id']
-        comments_users_ids.append(user_id)
-    return set(comments_users_ids)
-
-
 def get_post_reactions(access_token, post_id):
     url = f"https://graph.facebook.com/{post_id}/reactions"
     params = {'access_token':access_token}
@@ -81,45 +64,18 @@ def get_posts_reactions(access_token, posts_ids):
     return posts_reactions
 
 
-def get_reactions_users_ids(reactions):
-    reactions_users_ids = []
-    for reaction in reactions:
-        user_id = reaction['id']
-        reactions_users_ids.append(user_id)
-    return set(reactions_users_ids)
-
-
-def get_user_reactions(reactions, user):
-    user_reactions = []
-    for reaction in reactions:
-        user_id = reaction['id']
-        if not user_id==user:
-            continue
-        reaction_type = reaction['type']
-        user_reactions.append(reaction_type)
-    return user_reactions
-
-
 def get_user_reactions_statistic(user_id, reactions, facebook_reactions):
     user_reactions_statistic = {}
     for reaction in facebook_reactions:
-        user_reactions = get_user_reactions(reactions, user_id)
+        user_reactions = [reaction['type'] for reaction in reactions if user_id==reaction['id']]
         reactions_count = user_reactions.count(reaction)
         user_reactions_statistic[reaction] = reactions_count
     return user_reactions_statistic
 
 
-def get_users_reactions_statistic(users_ids, reactions, facebook_reactions):
-    users_reactions_statistic = {}
-    for user_id in users_ids:
-        user_reactions_statistic = get_user_reactions_statistic(user_id, reactions, facebook_reactions)
-        users_reactions_statistic[user_id] = user_reactions_statistic
-    return users_reactions_statistic
-
-
 def fetch_facebook_analyze(access_token, user_id, days_count, months_count, facebook_reactions, group_name):
     groups = get_groups(access_token, user_id)
-    group_id = determine_group_id(groups, group_name)
+    group_id = [group['id'] for group in groups if group['name']==group_name][0]
 
     if not group_id:
         exit(f'Группа {group_title} не найдена')
@@ -132,12 +88,13 @@ def fetch_facebook_analyze(access_token, user_id, days_count, months_count, face
         posts_ids, 
         start_date,
         )
-    commentators_ids = get_commentators_ids(posts_comments)
+    commentators_ids = set([comment['from']['id'] for comment in posts_comments])
     posts_reactions = get_posts_reactions(access_token, posts_ids)
-    reactions_users_ids = get_reactions_users_ids(posts_reactions)
-    users_reactions_statistic = get_users_reactions_statistic(
-        reactions_users_ids, 
-        posts_reactions, 
-        facebook_reactions,
-        )
+    reactions_users_ids = set([reaction['id'] for reaction in posts_reactions])
+    users_reactions_statistic = {
+        user_id: get_user_reactions_statistic(
+            user_id, 
+            posts_reactions, 
+            facebook_reactions
+        ) for user_id in reactions_users_ids}
     return commentators_ids, users_reactions_statistic
