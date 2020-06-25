@@ -84,7 +84,8 @@ vk_group_name=cocacola
 python smm_analyze.py instagram
 ```
 
-Пример результата для VK и Facebook: 
+Пример результата для VK и Facebook:
+
 ![](result_example.png)
 
 
