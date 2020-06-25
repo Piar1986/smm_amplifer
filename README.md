@@ -59,6 +59,23 @@ pip install -r requirements.txt
 - `vk_days_count` количество дней для анализа VK;
 - `vk_months_count` - количество месяцев для анализа VK.
 
+Значения по умолчанию:
+```
+facebook_days_count=0
+facebook_months_count=1
+instagram_posts_count=5
+instagram_days_count=0
+instagram_months_count=3
+vk_days_count=14
+vk_months_count=0
+```
+
+Пример минимального набора настроек, необходимых для запуска:
+```
+facebook_group_name=smm_analyze
+instagram_group_name=cocacolarus
+vk_group_name=cocacola
+```
 
 ### Как запустить
 
