@@ -45,21 +45,22 @@ def create_parser():
 def run_facebook_analyze(args, authentication_summary):
     facebook_access_token = authentication_summary['facebook_access_token']
     facebook_user_id = authentication_summary['facebook_user_id']
-    if not fetch_facebook_analyze(
+    commentators, reactions_statistic = fetch_facebook_analyze(
         facebook_access_token, 
         facebook_user_id,
         args.facebook_days_count,
         args.facebook_months_count,
         FACEBOOK_REACTIONS,
         args.facebook_group_name,
-        ):
-        exit(f'Группа {args.facebook_group_name} не найдена')
+        )
+    print('Commentators:', commentators)
+    print('Reactions statistic:', reactions_statistic)
 
 
 def run_instagram_analyze(args, authentication_summary):
     instagram_login = authentication_summary['instagram_login']
     instagram_password = authentication_summary['instagram_password']
-    fetch_instagram_analyze(
+    comments_top, posts_top = fetch_instagram_analyze(
         instagram_login, 
         instagram_password, 
         args.instagram_posts_count,
@@ -67,17 +68,20 @@ def run_instagram_analyze(args, authentication_summary):
         args.instagram_months_count,
         args.instagram_group_name,
         )
+    print('Comments Top:', comments_top)
+    print('Posts Top:', posts_top)
 
 
 def run_vk_analyze(args, authentication_summary):
     vk_access_token = authentication_summary['vk_access_token']
-    vk_audience_core = fetch_vk_analyze(
+    audience_core = fetch_vk_analyze(
         vk_access_token,
         VK_VERSION,
         args.vk_days_count,
         args.vk_months_count,
         args.vk_group_name,
         )
+    print('Audience core:', audience_core)
 
 
 def main():
