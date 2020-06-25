@@ -93,3 +93,4 @@ venv/
 images/
 formated_images/
 config/
+config.ini
