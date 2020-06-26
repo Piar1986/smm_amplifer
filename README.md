@@ -70,10 +70,15 @@ vk_days_count=14
 vk_months_count=0
 ```
 
+Файл конфигурации содержит разделы: `[facebook], [instagram], [vk]`. Укажите значение переменной в соответствующий раздел.
+
 Пример минимального набора настроек, необходимых для запуска:
 ```
+[facebook]
 facebook_group_name=smm_analyze
+[instagram]
 instagram_group_name=cocacolarus
+[vk]
 vk_group_name=cocacola
 ```
 
