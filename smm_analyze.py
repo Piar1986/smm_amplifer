@@ -1,5 +1,5 @@
 import argparse
-import configargparse
+import configparser
 import os
 from dotenv import load_dotenv
 from scripts.facebook import fetch_facebook_analyze
@@ -17,28 +17,35 @@ FACEBOOK_REACTIONS = [
     'THANKFUL',
 ]
 VK_VERSION = 5.107
+CONFIG_FILEPATH = 'config.ini'
 
 
 def create_parser():
-    parser = configargparse.ArgParser(default_config_files=['config.ini'])
-    parser.add('-c', '--config_file', is_config_file=True, help='Путь к файлу конфигурации')
-    parser.add('--facebook_group_name', required=True, help='Название группы Facebook', type=str)
-    parser.add('--facebook_days_count', help='Количество дней для анализа Facebook', type=int, default=0)
-    parser.add('--facebook_months_count', help='Количество месяцев для анализа Facebook', type=int, default=1)
-    parser.add('--instagram_group_name', required=True, help='Название группы Instagram', type=str)
-    parser.add('--instagram_posts_count', help='Количество постов Instagram', type=int, default=5)
-    parser.add('--instagram_days_count', help='Количество дней для анализа Instagram', type=int, default=0)
-    parser.add('--instagram_months_count', help='Количество месяцев для анализа Instagram', type=int, default=3)
-    parser.add('--vk_group_name', required=True, help='Название группы VK', type=str)
-    parser.add('--vk_days_count', help='Количество дней для анализа VK', type=int, default=14)
-    parser.add('--vk_months_count', help='Количество месяцев для анализа VK', type=int, default=0)
+    parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
+
     facebook_parser = subparsers.add_parser('facebook')
-    facebook_parser.set_defaults(function=run_facebook_analyze)
+    facebook_parser.add_argument('--facebook_group_name', help='Название группы Facebook', type=str)
+    facebook_parser.add_argument('--facebook_days_count', help='Количество дней для анализа Facebook', type=int, default=0)
+    facebook_parser.add_argument('--facebook_months_count', help='Количество месяцев для анализа Facebook', type=int, default=1)
+    
     instagram_parser = subparsers.add_parser('instagram')
-    instagram_parser.set_defaults(function=run_instagram_analyze)
+    instagram_parser.add_argument('--instagram_group_name', help='Название группы Instagram', type=str)
+    instagram_parser.add_argument('--instagram_posts_count', help='Количество постов Instagram', type=int, default=5)
+    instagram_parser.add_argument('--instagram_days_count', help='Количество дней для анализа Instagram', type=int, default=0)
+    instagram_parser.add_argument('--instagram_months_count', help='Количество месяцев для анализа Instagram', type=int, default=3)
+
     vk_parser = subparsers.add_parser('vk')
-    vk_parser.set_defaults(function=run_vk_analyze)
+    vk_parser.add_argument('--vk_group_name', help='Название группы VK', type=str)
+    vk_parser.add_argument('--vk_days_count', help='Количество дней для анализа VK', type=int, default=14)
+    vk_parser.add_argument('--vk_months_count', help='Количество месяцев для анализа VK', type=int, default=0)
+
+    config = configparser.ConfigParser()
+    config.read(CONFIG_FILEPATH)
+    
+    facebook_parser.set_defaults(function=run_facebook_analyze, **dict(config.items('facebook')))
+    instagram_parser.set_defaults(function=run_instagram_analyze, **dict(config.items('instagram')))
+    vk_parser.set_defaults(function=run_vk_analyze, **dict(config.items('vk')))
     return parser
 
 
